@@ -1,0 +1,4 @@
+# golang.org/x/crypto/openpgp is unmaintained (no fix exists). It is pulled in
+# indirectly via drone-template-lib -> sprig and is never called by this tool
+# (govulncheck: "your code doesn't appear to call these vulnerabilities").
+GO-2026-5932
