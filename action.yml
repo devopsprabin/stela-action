@@ -2,8 +2,8 @@ name: "Stela Action"
 description: "Send a build notification to a Stela group using a webhook"
 author: "devopsprabin"
 branding:
-  icon: "bell"
-  color: "blue"
+  icon: "message-square"
+  color: "gray-dark"
 
 inputs:
   webhook_url:
