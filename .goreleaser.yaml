@@ -98,7 +98,7 @@ release:
   extra_files:
     - glob: ./**.xz
 
-  name_template: "Stela Webhook {{.Version}}"
+  name_template: "Stela Action {{.Version}}"
 
 changelog:
   use: github

@@ -1,4 +1,4 @@
-name: "Stela Webhook"
+name: "Stela Action"
 description: "Send a build notification to a Stela group using a webhook"
 author: "devopsprabin"
 branding:
@@ -37,7 +37,7 @@ inputs:
     description: "Override the actor name. Defaults to the GitHub actor."
     required: false
   actor_avatar_url:
-    description: "Override the actor avatar URL."
+    description: "Override the actor avatar URL. Defaults to the GitHub avatar of the actor."
     required: false
   debug:
     description: "Enable debug mode."
@@ -45,4 +45,4 @@ inputs:
 
 runs:
   using: "docker"
-  image: "docker://ghcr.io/devopsprabin/stela-webhook:1"
+  image: "docker://ghcr.io/devopsprabin/stela-action:1"

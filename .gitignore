@@ -1,6 +1,6 @@
 *.test
 *.out
-stela-webhook
+stela-action
 .env
 coverage.txt
 release/

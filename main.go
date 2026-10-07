@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"net/url"
 	"os"
 	"strconv"
 	"time"
@@ -25,7 +26,7 @@ func main() {
 	}
 
 	app := cli.NewApp()
-	app.Name = "Stela Webhook"
+	app.Name = "Stela Action"
 	app.Usage = "Send build notifications to a Stela group using a webhook"
 	app.Copyright = "Copyright (c) " + strconv.Itoa(time.Now().Year()) + " ktmbees"
 	app.Action = run
@@ -216,7 +217,7 @@ func run(c *cli.Context) error {
 			Link:    c.String("commit.link"),
 			Author:  c.String("commit.author"),
 			Email:   c.String("commit.author.email"),
-			Avatar:  c.String("commit.author.avatar"),
+			Avatar:  authorAvatar(c.String("commit.author.avatar")),
 			Message: c.String("commit.message"),
 		},
 		Build: Build{
@@ -263,4 +264,15 @@ func buildLink(link string) string {
 		return ""
 	}
 	return server + "/" + repo + "/actions/runs/" + runID
+}
+
+// authorAvatar falls back to the GitHub avatar of the actor on GitHub Actions.
+func authorAvatar(avatar string) string {
+	if avatar != "" {
+		return avatar
+	}
+	if actor := os.Getenv("GITHUB_ACTOR"); actor != "" && os.Getenv("GITHUB_ACTIONS") == "true" {
+		return "https://github.com/" + url.PathEscape(actor) + ".png"
+	}
+	return ""
 }

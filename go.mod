@@ -1,4 +1,4 @@
-module github.com/devopsprabin/stela-webhook
+module github.com/devopsprabin/stela-action
 
 go 1.26.0
 

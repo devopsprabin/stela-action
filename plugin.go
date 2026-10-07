@@ -16,8 +16,12 @@ import (
 	"github.com/appleboy/drone-template-lib/template"
 )
 
-// DefaultBaseURL is the Stela API used when only webhook-id and webhook-secret are set.
-const DefaultBaseURL = "https://api-stela.ktmbees.dev"
+const (
+	// DefaultBaseURL is the Stela API used when only webhook-id and webhook-secret are set.
+	DefaultBaseURL = "https://api-stela.ktmbees.dev"
+	// DefaultIconURL is the actor avatar used when no commit author avatar is known.
+	DefaultIconURL = "https://raw.githubusercontent.com/devopsprabin/stela-action/main/images/logo.png"
+)
 
 type (
 	// Repo information.
@@ -184,7 +188,7 @@ func (p *Plugin) BuildPayload() (Payload, error) {
 		Color:          p.color(status),
 		SourceURL:      firstNonEmpty(p.Config.SourceURL, p.Build.Link, p.Commit.Link),
 		ActorName:      firstNonEmpty(p.Config.ActorName, p.Commit.Author),
-		ActorAvatarURL: firstNonEmpty(p.Config.ActorAvatarURL, p.Commit.Avatar),
+		ActorAvatarURL: firstNonEmpty(p.Config.ActorAvatarURL, p.Commit.Avatar, DefaultIconURL),
 	}, nil
 }
 

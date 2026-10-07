@@ -120,6 +120,23 @@ func TestSendTemplatedPayload(t *testing.T) {
 	assert.Equal(t, "Drone", got.ActorName)
 }
 
+func TestDefaultActorAvatar(t *testing.T) {
+	plugin := Plugin{Build: Build{Status: "success"}}
+
+	payload, err := plugin.BuildPayload()
+
+	require.NoError(t, err)
+	assert.Equal(t, DefaultIconURL, payload.ActorAvatarURL)
+}
+
+func TestAuthorAvatarOnGitHubActions(t *testing.T) {
+	t.Setenv("GITHUB_ACTIONS", "true")
+	t.Setenv("GITHUB_ACTOR", "devopsprabin")
+
+	assert.Equal(t, "https://github.com/devopsprabin.png", authorAvatar(""))
+	assert.Equal(t, "https://example.com/a.png", authorAvatar("https://example.com/a.png"))
+}
+
 func TestSendErrorResponse(t *testing.T) {
 	srv := newTestServer(t, http.StatusUnauthorized, nil, nil)
 
@@ -149,8 +166,8 @@ func TestLiveWebhook(t *testing.T) {
 	}
 
 	plugin := Plugin{
-		Repo:   Repo{FullName: "devopsprabin/stela-webhook"},
-		Commit: Commit{Author: "stela-webhook", Branch: "main", Message: "stela-webhook live test"},
+		Repo:   Repo{FullName: "devopsprabin/stela-action"},
+		Commit: Commit{Author: "stela-action", Branch: "main", Message: "stela-action live test"},
 		Build:  Build{Number: 1, Status: "success", Event: "push"},
 		Config: Config{webhookURL: webhookURL},
 	}

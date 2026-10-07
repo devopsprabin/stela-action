@@ -1,4 +1,4 @@
-EXECUTABLE := stela-webhook
+EXECUTABLE := stela-action
 GOFMT ?= gofumpt -l -w
 GO ?= go
 GOFILES := $(shell find . -name "*.go" -type f)
@@ -84,4 +84,4 @@ version:
 	@echo $(VERSION)
 
 docker: build_linux_amd64
-	docker build --platform linux/amd64 --build-arg TARGETOS=linux --build-arg TARGETARCH=amd64 -f docker/Dockerfile -t stela-webhook .
+	docker build --platform linux/amd64 --build-arg TARGETOS=linux --build-arg TARGETARCH=amd64 -f docker/Dockerfile -t stela-action .

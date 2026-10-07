@@ -66,12 +66,12 @@ jobs:
           platforms: linux/amd64
           push: false
           load: true
-          tags: stela-webhook:scan
+          tags: stela-action:scan
 
       - name: Run Trivy vulnerability scanner (image)
         uses: aquasecurity/trivy-action@v0.36.0
         with:
-          image-ref: "stela-webhook:scan"
+          image-ref: "stela-action:scan"
           format: "sarif"
           output: "trivy-image-results.sarif"
           severity: "CRITICAL,HIGH"
