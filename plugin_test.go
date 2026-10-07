@@ -141,11 +141,11 @@ func TestTransportErrorHidesSecret(t *testing.T) {
 	assert.NotContains(t, err.Error(), "topsecret")
 }
 
-// TestLiveWebhook sends a real message when STELA_WEBHOOK_URL is set.
+// TestLiveWebhook sends a real message when WEBHOOK_URL is set.
 func TestLiveWebhook(t *testing.T) {
-	webhookURL := os.Getenv("STELA_WEBHOOK_URL")
+	webhookURL := os.Getenv("WEBHOOK_URL")
 	if webhookURL == "" {
-		t.Skip("STELA_WEBHOOK_URL not set")
+		t.Skip("WEBHOOK_URL not set")
 	}
 
 	plugin := Plugin{

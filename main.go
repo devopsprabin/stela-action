@@ -34,33 +34,33 @@ func main() {
 		&cli.StringFlag{
 			Name:    "webhook-url",
 			Usage:   "The full Stela webhook URL (https://<host>/webhooks/<id>/<secret>).",
-			EnvVars: []string{"PLUGIN_WEBHOOK_URL", "STELA_WEBHOOK_URL", "WEBHOOK_URL", "INPUT_WEBHOOK_URL"},
+			EnvVars: []string{"PLUGIN_WEBHOOK_URL", "WEBHOOK_URL", "INPUT_WEBHOOK_URL"},
 		},
 		&cli.StringFlag{
 			Name:    "webhook-id",
 			Usage:   "The Stela webhook ID (alternative to webhook-url).",
-			EnvVars: []string{"PLUGIN_WEBHOOK_ID", "STELA_WEBHOOK_ID", "WEBHOOK_ID", "INPUT_WEBHOOK_ID"},
+			EnvVars: []string{"PLUGIN_WEBHOOK_ID", "WEBHOOK_ID", "INPUT_WEBHOOK_ID"},
 		},
 		&cli.StringFlag{
 			Name:    "webhook-secret",
 			Usage:   "The Stela webhook secret (alternative to webhook-url).",
-			EnvVars: []string{"PLUGIN_WEBHOOK_SECRET", "STELA_WEBHOOK_SECRET", "WEBHOOK_SECRET", "INPUT_WEBHOOK_SECRET"},
+			EnvVars: []string{"PLUGIN_WEBHOOK_SECRET", "WEBHOOK_SECRET", "INPUT_WEBHOOK_SECRET"},
 		},
 		&cli.StringFlag{
 			Name:    "base-url",
 			Value:   DefaultBaseURL,
 			Usage:   "The Stela API base URL, used with webhook-id and webhook-secret.",
-			EnvVars: []string{"PLUGIN_BASE_URL", "STELA_BASE_URL", "INPUT_BASE_URL"},
+			EnvVars: []string{"PLUGIN_BASE_URL", "BASE_URL", "INPUT_BASE_URL"},
 		},
 		&cli.StringFlag{
 			Name:    "title",
 			Usage:   "Message title (template). Defaults to the commit message.",
-			EnvVars: []string{"PLUGIN_TITLE", "STELA_TITLE", "INPUT_TITLE"},
+			EnvVars: []string{"PLUGIN_TITLE", "INPUT_TITLE"},
 		},
 		&cli.StringFlag{
 			Name:    "description",
 			Usage:   "Message description (template). Defaults to a build summary.",
-			EnvVars: []string{"PLUGIN_DESCRIPTION", "PLUGIN_MESSAGE", "STELA_DESCRIPTION", "INPUT_DESCRIPTION"},
+			EnvVars: []string{"PLUGIN_DESCRIPTION", "PLUGIN_MESSAGE", "INPUT_DESCRIPTION"},
 		},
 		&cli.StringFlag{
 			Name:    "status",

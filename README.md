@@ -17,7 +17,7 @@ GitHub Action for sending a build notification to a Stela group. It also works a
 
 ## Usage
 
-Create a Stela group webhook with provider `GENERIC` and save its URL as the repository secret `STELA_WEBHOOK_URL`. The last part of the URL is the secret, so never commit it.
+Create a Stela group webhook with provider `GENERIC` and save its URL as the repository secret `WEBHOOK_URL`. The last part of the URL is the secret, so never commit it.
 
 Send a custom message as shown below:
 
@@ -33,7 +33,7 @@ jobs:
       - name: send custom message
         uses: devopsprabin/stela-webhook@v1
         with:
-          webhook_url: ${{ secrets.STELA_WEBHOOK_URL }}
+          webhook_url: ${{ secrets.WEBHOOK_URL }}
           title: ${{ github.repository }} build
           description: The ${{ github.event_name }} event triggered first step.
 ```
@@ -61,7 +61,7 @@ Send a custom message using `webhook_url`:
 - name: send message
   uses: devopsprabin/stela-webhook@v1
   with:
-    webhook_url: ${{ secrets.STELA_WEBHOOK_URL }}
+    webhook_url: ${{ secrets.WEBHOOK_URL }}
     description: The ${{ github.event_name }} event triggered first step.
 ```
 
@@ -71,7 +71,7 @@ Send the default message:
 - name: send message
   uses: devopsprabin/stela-webhook@v1
   with:
-    webhook_url: ${{ secrets.STELA_WEBHOOK_URL }}
+    webhook_url: ${{ secrets.WEBHOOK_URL }}
 ```
 
 Report the job result, even when earlier steps fail:
@@ -81,7 +81,7 @@ Report the job result, even when earlier steps fail:
   if: always()
   uses: devopsprabin/stela-webhook@v1
   with:
-    webhook_url: ${{ secrets.STELA_WEBHOOK_URL }}
+    webhook_url: ${{ secrets.WEBHOOK_URL }}
     status: ${{ job.status }}
 ```
 
@@ -91,8 +91,8 @@ Send the message with a custom color and actor name:
 - name: send message
   uses: devopsprabin/stela-webhook@v1
   with:
-    webhook_id: ${{ secrets.STELA_WEBHOOK_ID }}
-    webhook_secret: ${{ secrets.STELA_WEBHOOK_SECRET }}
+    webhook_id: ${{ secrets.WEBHOOK_ID }}
+    webhook_secret: ${{ secrets.WEBHOOK_SECRET }}
     color: "#48f442"
     actor_name: "GitHub Bot"
     description: "A new commit has been pushed with custom color."
@@ -104,7 +104,7 @@ Use a template in the description:
 - name: send message
   uses: devopsprabin/stela-webhook@v1
   with:
-    webhook_url: ${{ secrets.STELA_WEBHOOK_URL }}
+    webhook_url: ${{ secrets.WEBHOOK_URL }}
     status: ${{ job.status }}
     description: >
       {{#success build.status}}{{repo.fullName}} #{{build.number}} passed{{else}}{{repo.fullName}} #{{build.number}} failed{{/success}}
@@ -119,7 +119,7 @@ Templates can use `repo.*`, `commit.*` (`sha`, `branch`, `author`, `message`, `l
   image: devopsprabin/stela-webhook
   settings:
     webhook_url:
-      from_secret: stela_webhook_url
+      from_secret: webhook_url
   when:
     status: [success, failure]
 ```
