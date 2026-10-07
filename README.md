@@ -1,73 +1,138 @@
-# stela-webhook
+# Stela Webhook for GitHub Actions
 
-Drone/Woodpecker/GitHub Actions plugin that posts build notifications to a Stela group through a **Generic** webhook.
+[![Lint and Testing](https://github.com/devopsprabin/stela-webhook/actions/workflows/testing.yml/badge.svg)](https://github.com/devopsprabin/stela-webhook/actions/workflows/testing.yml)
+[![Docker Image](https://github.com/devopsprabin/stela-webhook/actions/workflows/docker.yml/badge.svg)](https://github.com/devopsprabin/stela-webhook/actions/workflows/docker.yml)
 
-It POSTs Stela's generic payload to `https://api-stela.ktmbees.dev/webhooks/<id>/<secret>`:
+GitHub Action for sending a build notification to a Stela group. It also works as a Drone and Woodpecker plugin.
 
-```json
-{ "title": "...", "description": "...", "status": "success", "color": "#1ac600",
-  "sourceUrl": "<build link>", "actorName": "<commit author>", "actorAvatarUrl": "<avatar>" }
-```
+**Important:** Only supports Linux Docker containers.
 
-## Setup
+## Features
 
-1. In Stela, create a group webhook with provider `GENERIC` (`POST /groups/{groupId}/webhooks`). Copy the URL, because the secret is shown only once.
-2. Store the full URL as a CI secret, e.g. `stela_webhook_url`. Don't commit it.
+- [x] Default build summary (commit, author, branch, build number, status)
+- [x] Custom title and description with templates
+- [x] Status-based colors (green for success, red for failure, yellow otherwise)
+- [x] Custom actor name and avatar
+- [x] Works on GitHub Actions, Drone and Woodpecker
 
-## Drone usage
+## Usage
 
-```yaml
-- name: notify stela
-  image: devopsprabin/stela-webhook
-  settings:
-    webhook_url:
-      from_secret: stela_webhook_url
-  when:
-    status: [success, failure]
-```
+Create a Stela group webhook with provider `GENERIC` and save its URL as the repository secret `STELA_WEBHOOK_URL`. The last part of the URL is the secret, so never commit it.
 
-With custom templates:
+Send a custom message as shown below:
 
 ```yaml
-- name: notify stela
-  image: devopsprabin/stela-webhook
-  settings:
-    webhook_url:
-      from_secret: stela_webhook_url
-    title: "{{repo.fullName}} #{{build.number}}"
+name: stela message
+on: [push]
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: send custom message
+        uses: devopsprabin/stela-webhook@v1
+        with:
+          webhook_url: ${{ secrets.STELA_WEBHOOK_URL }}
+          title: ${{ github.repository }} build
+          description: The ${{ github.event_name }} event triggered first step.
+```
+
+## Input variables
+
+- `webhook_url`: Webhook URL of the Stela group.
+- `webhook_id`: Webhook ID (use with `webhook_secret` instead of `webhook_url`).
+- `webhook_secret`: Webhook secret.
+- `base_url`: (Optional) Stela API base URL. Default: `https://api-stela.ktmbees.dev`.
+- `title`: (Optional) Message title. Default: first line of the commit message.
+- `description`: (Optional) Message description. Default: a build summary.
+- `status`: (Optional) Build status, usually `${{ job.status }}`. Default: `success`.
+- `color`: (Optional) Hex color code. Default: derived from the status.
+- `source_url`: (Optional) Link attached to the message. Default: the workflow run URL.
+- `actor_name`: (Optional) Override the actor name. Default: the commit author.
+- `actor_avatar_url`: (Optional) Override the actor avatar.
+- `debug`: (Optional) Enable debug mode.
+
+## Example
+
+Send a custom message using `webhook_url`:
+
+```yaml
+- name: send message
+  uses: devopsprabin/stela-webhook@v1
+  with:
+    webhook_url: ${{ secrets.STELA_WEBHOOK_URL }}
+    description: The ${{ github.event_name }} event triggered first step.
+```
+
+Send the default message:
+
+```yaml
+- name: send message
+  uses: devopsprabin/stela-webhook@v1
+  with:
+    webhook_url: ${{ secrets.STELA_WEBHOOK_URL }}
+```
+
+Report the job result, even when earlier steps fail:
+
+```yaml
+- name: send message
+  if: always()
+  uses: devopsprabin/stela-webhook@v1
+  with:
+    webhook_url: ${{ secrets.STELA_WEBHOOK_URL }}
+    status: ${{ job.status }}
+```
+
+Send the message with a custom color and actor name:
+
+```yaml
+- name: send message
+  uses: devopsprabin/stela-webhook@v1
+  with:
+    webhook_id: ${{ secrets.STELA_WEBHOOK_ID }}
+    webhook_secret: ${{ secrets.STELA_WEBHOOK_SECRET }}
+    color: "#48f442"
+    actor_name: "GitHub Bot"
+    description: "A new commit has been pushed with custom color."
+```
+
+Use a template in the description:
+
+```yaml
+- name: send message
+  uses: devopsprabin/stela-webhook@v1
+  with:
+    webhook_url: ${{ secrets.STELA_WEBHOOK_URL }}
+    status: ${{ job.status }}
     description: >
-      {{#success build.status}}Deployed {{commit.branch}} by {{commit.author}}{{else}}Build failed on {{commit.branch}}{{/success}}
-    actor_name: Drone
+      {{#success build.status}}{{repo.fullName}} #{{build.number}} passed{{else}}{{repo.fullName}} #{{build.number}} failed{{/success}}
+```
+
+Templates can use `repo.*`, `commit.*` (`sha`, `branch`, `author`, `message`, `link`) and `build.*` (`number`, `status`, `event`, `link`, `tag`, `started`, `finished`), plus helpers such as `success`, `failure`, `truncate`, `datetime` and `since`. Field names are camelCase, e.g. `{{repo.fullName}}`.
+
+## Drone and Woodpecker
+
+```yaml
+- name: notify stela
+  image: devopsprabin/stela-webhook
+  settings:
+    webhook_url:
+      from_secret: stela_webhook_url
   when:
     status: [success, failure]
 ```
 
-## Settings
-
-| Setting | Env fallbacks | Default |
-|---|---|---|
-| `webhook_url` | `STELA_WEBHOOK_URL`, `WEBHOOK_URL` | required, unless id + secret are set |
-| `webhook_id` + `webhook_secret` | `STELA_WEBHOOK_ID`, `STELA_WEBHOOK_SECRET` | alternative to `webhook_url` |
-| `base_url` | `STELA_BASE_URL` | `https://api-stela.ktmbees.dev` |
-| `title` | | first line of the commit message |
-| `description` (alias `message`) | | build summary (author, branch, repo, build #, sha) |
-| `status` | | build status |
-| `color` | | from status: green success, red failure/error/killed, yellow otherwise |
-| `source_url` | | build link |
-| `actor_name` (alias `username`) | | commit author |
-| `actor_avatar_url` (alias `avatar_url`) | | commit author avatar |
-| `debug` | | `false` |
-
-`title` and `description` are Handlebars templates. They can use `repo.*`, `commit.*` (`sha`, `branch`, `author`, `message`, `link`), `build.*` (`number`, `status`, `event`, `link`, `tag`, `started`, `finished`) and helpers such as `success`, `failure`, `truncate`, `datetime` and `since`. Field names are camelCase, e.g. `{{repo.fullName}}`.
+Every input above is also a plugin setting with the same name. On Drone, the status, commit message, author and build link are filled in automatically.
 
 On Woodpecker 3.x, `build.status` is always `success`. Use separate steps with `when.status: [success]` and `when.status: [failure]` to send different messages.
 
 ## Development
 
 ```sh
-make test                         # unit tests (httptest, no network)
-cp .env.example .env              # add your real URL
-STELA_WEBHOOK_URL=... go test -run TestLiveWebhook ./...   # sends one real message
-make build && PLUGIN_ENV_FILE=.env ./bin/stela-webhook       # run locally
-make docker                       # builds linux/amd64 image tagged stela-webhook
+make test                                                  # unit tests, no network
+cp .env.example .env                                       # add your real URL
+make build && PLUGIN_ENV_FILE=.env ./bin/stela-webhook     # send a message locally
+make docker                                                # build linux/amd64 image
 ```

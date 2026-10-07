@@ -224,7 +224,7 @@ func run(c *cli.Context) error {
 			Number:   c.Int("build.number"),
 			Event:    c.String("build.event"),
 			Status:   c.String("build.status"),
-			Link:     c.String("build.link"),
+			Link:     buildLink(c.String("build.link")),
 			Started:  c.Int64("build.started"),
 			Finished: c.Int64("build.finished"),
 			PR:       c.String("pull.request"),
@@ -251,4 +251,16 @@ func run(c *cli.Context) error {
 	}
 
 	return plugin.Exec(c.Context)
+}
+
+// buildLink falls back to the GitHub Actions run URL when no CI link is set.
+func buildLink(link string) string {
+	if link != "" {
+		return link
+	}
+	server, repo, runID := os.Getenv("GITHUB_SERVER_URL"), os.Getenv("GITHUB_REPOSITORY"), os.Getenv("GITHUB_RUN_ID")
+	if server == "" || repo == "" || runID == "" {
+		return ""
+	}
+	return server + "/" + repo + "/actions/runs/" + runID
 }

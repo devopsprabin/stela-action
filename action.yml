@@ -1,0 +1,48 @@
+name: "Stela Webhook"
+description: "Send a build notification to a Stela group using a webhook"
+author: "devopsprabin"
+branding:
+  icon: "bell"
+  color: "blue"
+
+inputs:
+  webhook_url:
+    description: "Full Stela webhook URL (https://<host>/webhooks/<id>/<secret>)."
+    required: false
+  webhook_id:
+    description: "Stela webhook ID (use with webhook_secret instead of webhook_url)."
+    required: false
+  webhook_secret:
+    description: "Stela webhook secret (use with webhook_id instead of webhook_url)."
+    required: false
+  base_url:
+    description: "Stela API base URL, used with webhook_id and webhook_secret."
+    required: false
+  title:
+    description: "Message title (template). Defaults to the commit message."
+    required: false
+  description:
+    description: "Message description (template). Defaults to a build summary."
+    required: false
+  status:
+    description: "Status sent to Stela, e.g. ${{ job.status }}. Defaults to success."
+    required: false
+  color:
+    description: "Hex color such as #48f442. Defaults to a color derived from the status."
+    required: false
+  source_url:
+    description: "Link attached to the message. Defaults to the workflow run URL."
+    required: false
+  actor_name:
+    description: "Override the actor name. Defaults to the GitHub actor."
+    required: false
+  actor_avatar_url:
+    description: "Override the actor avatar URL."
+    required: false
+  debug:
+    description: "Enable debug mode."
+    required: false
+
+runs:
+  using: "docker"
+  image: "docker://ghcr.io/devopsprabin/stela-webhook:1"
