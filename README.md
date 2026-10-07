@@ -19,7 +19,7 @@ GitHub Action for sending a build notification to a Stela group. It also works a
 
 ## Usage
 
-Create a Stela group webhook with provider `GENERIC` and save its URL as the repository secret `WEBHOOK_URL`. The last part of the URL is the secret, so never commit it.
+Create a Stela group webhook with provider `GENERIC` and save its URL as the repository secret `WEBHOOK_URL`. The URL has the form `https://api-stela.ktmbees.dev/webhooks/<webhook_id>/<webhook_token>`; the token is secret, so never commit it.
 
 Send a custom message as shown below:
 
@@ -43,8 +43,8 @@ jobs:
 ## Input variables
 
 - `webhook_url`: Webhook URL of the Stela group.
-- `webhook_id`: Webhook ID (use with `webhook_secret` instead of `webhook_url`).
-- `webhook_secret`: Webhook secret.
+- `webhook_id`: Webhook ID of the Stela group.
+- `webhook_token`: Webhook token of the Stela group.
 - `base_url`: (Optional) Stela API base URL. Default: `https://api-stela.ktmbees.dev`.
 - `title`: (Optional) Message title. Default: first line of the commit message.
 - `description`: (Optional) Message description. Default: a build summary.
@@ -94,7 +94,7 @@ Send the message with a custom color and actor name:
   uses: devopsprabin/stela-action@v1
   with:
     webhook_id: ${{ secrets.WEBHOOK_ID }}
-    webhook_secret: ${{ secrets.WEBHOOK_SECRET }}
+    webhook_token: ${{ secrets.WEBHOOK_TOKEN }}
     color: "#48f442"
     actor_name: "GitHub Bot"
     description: "A new commit has been pushed with custom color."

@@ -34,7 +34,7 @@ func main() {
 	app.Flags = []cli.Flag{
 		&cli.StringFlag{
 			Name:    "webhook-url",
-			Usage:   "The full Stela webhook URL (https://<host>/webhooks/<id>/<secret>).",
+			Usage:   "The full Stela webhook URL (https://<host>/webhooks/<id>/<token>).",
 			EnvVars: []string{"PLUGIN_WEBHOOK_URL", "WEBHOOK_URL", "INPUT_WEBHOOK_URL"},
 		},
 		&cli.StringFlag{
@@ -43,14 +43,15 @@ func main() {
 			EnvVars: []string{"PLUGIN_WEBHOOK_ID", "WEBHOOK_ID", "INPUT_WEBHOOK_ID"},
 		},
 		&cli.StringFlag{
-			Name:    "webhook-secret",
-			Usage:   "The Stela webhook secret (alternative to webhook-url).",
-			EnvVars: []string{"PLUGIN_WEBHOOK_SECRET", "WEBHOOK_SECRET", "INPUT_WEBHOOK_SECRET"},
+			Name:    "webhook-token",
+			Aliases: []string{"webhook-secret"},
+			Usage:   "The Stela webhook token (alternative to webhook-url).",
+			EnvVars: []string{"PLUGIN_WEBHOOK_TOKEN", "WEBHOOK_TOKEN", "INPUT_WEBHOOK_TOKEN", "PLUGIN_WEBHOOK_SECRET", "WEBHOOK_SECRET", "INPUT_WEBHOOK_SECRET"},
 		},
 		&cli.StringFlag{
 			Name:    "base-url",
 			Value:   DefaultBaseURL,
-			Usage:   "The Stela API base URL, used with webhook-id and webhook-secret.",
+			Usage:   "The Stela API base URL, used with webhook-id and webhook-token.",
 			EnvVars: []string{"PLUGIN_BASE_URL", "BASE_URL", "INPUT_BASE_URL"},
 		},
 		&cli.StringFlag{
@@ -234,7 +235,7 @@ func run(c *cli.Context) error {
 		Config: Config{
 			webhookURL:     c.String("webhook-url"),
 			WebhookID:      c.String("webhook-id"),
-			webhookSecret:  c.String("webhook-secret"),
+			webhookToken:   c.String("webhook-token"),
 			BaseURL:        c.String("base-url"),
 			Title:          c.String("title"),
 			Description:    c.String("description"),

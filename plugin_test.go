@@ -38,7 +38,7 @@ func TestMissingConfig(t *testing.T) {
 	err := plugin.Exec(context.Background())
 
 	require.Error(t, err)
-	assert.Contains(t, err.Error(), "missing stela config: WebhookID, WebhookSecret")
+	assert.Contains(t, err.Error(), "missing stela config: WebhookID, WebhookToken")
 }
 
 func TestInvalidWebhookURL(t *testing.T) {
@@ -50,8 +50,8 @@ func TestInvalidWebhookURL(t *testing.T) {
 	assert.Contains(t, err.Error(), "scheme must be http or https")
 }
 
-func TestGetWebhookURLFromIDAndSecret(t *testing.T) {
-	c := Config{WebhookID: "abc", webhookSecret: "s3cr3t", BaseURL: "https://example.com/"}
+func TestGetWebhookURLFromIDAndToken(t *testing.T) {
+	c := Config{WebhookID: "abc", webhookToken: "s3cr3t", BaseURL: "https://example.com/"}
 	assert.Equal(t, "https://example.com/webhooks/abc/s3cr3t", c.GetWebhookURL())
 
 	c.BaseURL = ""
@@ -74,15 +74,15 @@ func TestSendDefaultPayload(t *testing.T) {
 		},
 		Build: Build{Number: 42, Status: "failure", Event: "push", Link: "https://ci.example.com/42"},
 		Config: Config{
-			WebhookID:     "hook-id",
-			webhookSecret: "hook-secret",
-			BaseURL:       srv.URL,
+			WebhookID:    "hook-id",
+			webhookToken: "hook-token",
+			BaseURL:      srv.URL,
 		},
 	}
 
 	require.NoError(t, plugin.Exec(context.Background()))
 
-	assert.Equal(t, "/webhooks/hook-id/hook-secret", path)
+	assert.Equal(t, "/webhooks/hook-id/hook-token", path)
 	assert.Equal(t, Payload{
 		Title:          "feat: add webhook",
 		Description:    "pstha pushed to main · ktmbees/stela build #42: failure · commit e7c4f0a6",

@@ -7,16 +7,20 @@ branding:
 
 inputs:
   webhook_url:
-    description: "Full Stela webhook URL (https://<host>/webhooks/<id>/<secret>)."
+    description: "Full Stela webhook URL (https://<host>/webhooks/<id>/<token>)."
     required: false
   webhook_id:
-    description: "Stela webhook ID (use with webhook_secret instead of webhook_url)."
+    description: "Stela webhook ID (use with webhook_token instead of webhook_url)."
+    required: false
+  webhook_token:
+    description: "Stela webhook token (use with webhook_id instead of webhook_url)."
     required: false
   webhook_secret:
-    description: "Stela webhook secret (use with webhook_id instead of webhook_url)."
+    description: "Deprecated: use webhook_token."
     required: false
+    deprecationMessage: "webhook_secret is deprecated, use webhook_token instead."
   base_url:
-    description: "Stela API base URL, used with webhook_id and webhook_secret."
+    description: "Stela API base URL, used with webhook_id and webhook_token."
     required: false
   title:
     description: "Message title (template). Defaults to the commit message."

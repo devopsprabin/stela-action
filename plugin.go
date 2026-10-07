@@ -17,7 +17,7 @@ import (
 )
 
 const (
-	// DefaultBaseURL is the Stela API used when only webhook-id and webhook-secret are set.
+	// DefaultBaseURL is the Stela API used when only webhook-id and webhook-token are set.
 	DefaultBaseURL = "https://api-stela.ktmbees.dev"
 	// DefaultIconURL is the actor avatar used when no commit author avatar is known.
 	DefaultIconURL = "https://raw.githubusercontent.com/devopsprabin/stela-action/main/images/logo.png"
@@ -61,7 +61,7 @@ type (
 	Config struct {
 		webhookURL     string
 		WebhookID      string
-		webhookSecret  string
+		webhookToken   string
 		BaseURL        string
 		Title          string
 		Description    string
@@ -110,8 +110,8 @@ func (c *Config) validate() error {
 	if c.WebhookID == "" {
 		missingFields = append(missingFields, "WebhookID")
 	}
-	if c.webhookSecret == "" {
-		missingFields = append(missingFields, "WebhookSecret")
+	if c.webhookToken == "" {
+		missingFields = append(missingFields, "WebhookToken")
 	}
 	if len(missingFields) > 0 {
 		return fmt.Errorf("missing stela config: %s", strings.Join(missingFields, ", "))
@@ -119,7 +119,7 @@ func (c *Config) validate() error {
 	return nil
 }
 
-// GetWebhookURL returns the configured URL, or builds one from base url, id and secret.
+// GetWebhookURL returns the configured URL, or builds one from base url, id and token.
 func (c *Config) GetWebhookURL() string {
 	if c.webhookURL != "" {
 		return c.webhookURL
@@ -131,7 +131,7 @@ func (c *Config) GetWebhookURL() string {
 	return fmt.Sprintf("%s/webhooks/%s/%s",
 		strings.TrimRight(base, "/"),
 		url.PathEscape(c.WebhookID),
-		url.PathEscape(c.webhookSecret),
+		url.PathEscape(c.webhookToken),
 	)
 }
 
@@ -207,7 +207,7 @@ func (p *Plugin) Send(ctx context.Context, payload Payload) error {
 
 	resp, err := p.httpClient.Do(req)
 	if err != nil {
-		// Strip the URL from transport errors so the secret never hits CI logs.
+		// Strip the URL from transport errors so the token never hits CI logs.
 		var urlErr *url.Error
 		if errors.As(err, &urlErr) {
 			err = urlErr.Err
