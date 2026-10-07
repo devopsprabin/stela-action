@@ -1,0 +1,8 @@
+*.test
+*.out
+stela-webhook
+.env
+coverage.txt
+release/
+dist/
+bin/
