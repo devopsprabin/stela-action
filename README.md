@@ -1,6 +1,6 @@
 # stela-webhook
 
-Drone/Woodpecker/GitHub Actions plugin that posts build notifications to a Stela group through a **Generic** webhook. Modeled on [appleboy/drone-discord](https://github.com/appleboy/drone-discord).
+Drone/Woodpecker/GitHub Actions plugin that posts build notifications to a Stela group through a **Generic** webhook.
 
 It POSTs Stela's generic payload to `https://api-stela.ktmbees.dev/webhooks/<id>/<secret>`:
 
@@ -58,9 +58,9 @@ With custom templates:
 | `actor_avatar_url` (alias `avatar_url`) | | commit author avatar |
 | `debug` | | `false` |
 
-`title` and `description` are Handlebars templates rendered with [drone-template-lib](https://github.com/appleboy/drone-template-lib). They can use `repo.*`, `commit.*` (`sha`, `branch`, `author`, `message`, `link`), `build.*` (`number`, `status`, `event`, `link`, `tag`, `started`, `finished`) and helpers such as `success`, `failure`, `truncate`, `datetime` and `since`. Field names are camelCase, e.g. `{{repo.fullName}}`.
+`title` and `description` are Handlebars templates. They can use `repo.*`, `commit.*` (`sha`, `branch`, `author`, `message`, `link`), `build.*` (`number`, `status`, `event`, `link`, `tag`, `started`, `finished`) and helpers such as `success`, `failure`, `truncate`, `datetime` and `since`. Field names are camelCase, e.g. `{{repo.fullName}}`.
 
-On Woodpecker 3.x, `build.status` is always `success`. Use separate steps with `when.status` for success and failure, as described in drone-discord's docs.
+On Woodpecker 3.x, `build.status` is always `success`. Use separate steps with `when.status: [success]` and `when.status: [failure]` to send different messages.
 
 ## Development
 
