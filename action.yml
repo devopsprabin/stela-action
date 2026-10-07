@@ -29,7 +29,7 @@ inputs:
     description: "Message description (template). Defaults to a build summary."
     required: false
   status:
-    description: "Status sent to Stela, e.g. ${{ job.status }}. Defaults to success."
+    description: "Status sent to Stela, e.g. success or failure (pass job.status). Defaults to success."
     required: false
   color:
     description: "Hex color such as #48f442. Defaults to a color derived from the status."
