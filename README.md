@@ -19,7 +19,7 @@ GitHub Action for sending a build notification to a Stela group. It also works a
 
 ## Usage
 
-Create a Stela group webhook with provider `GENERIC` and save its URL as the repository secret `WEBHOOK_URL`. The URL has the form `https://api-stela.ktmbees.dev/webhooks/<webhook_id>/<webhook_token>`; the token is secret, so never commit it.
+Create a Stela group webhook with provider `GENERIC` and save its URL as the repository secret `WEBHOOK_URL`, or save its ID and token as `WEBHOOK_ID` and `WEBHOOK_TOKEN`. The token is secret, so never commit it.
 
 Send a custom message as shown below:
 
@@ -45,7 +45,7 @@ jobs:
 - `webhook_url`: Webhook URL of the Stela group.
 - `webhook_id`: Webhook ID of the Stela group.
 - `webhook_token`: Webhook token of the Stela group.
-- `base_url`: (Optional) Stela API base URL. Default: `https://api-stela.ktmbees.dev`.
+- `base_url`: (Optional) Stela API base URL. Available in the Stela app.
 - `title`: (Optional) Message title. Default: first line of the commit message.
 - `description`: (Optional) Message description. Default: a build summary.
 - `status`: (Optional) Build status, usually `${{ job.status }}`. Default: `success`.
