@@ -50,7 +50,7 @@ jobs:
 - `description`: (Optional) Message description. Default: a build summary.
 - `status`: (Optional) Build status, usually `${{ job.status }}`. Default: `success`.
 - `color`: (Optional) Hex color code. Default: derived from the status.
-- `source_url`: (Optional) Link attached to the message. Default: the workflow run URL.
+- `source_url`: (Optional) Link attached to the message. Default: the workflow run URL. Set to `none` to send no link.
 - `actor_name`: (Optional) Override the actor name. Default: the commit author.
 - `actor_avatar_url`: (Optional) Override the actor avatar. Default: the commit author's GitHub avatar, or the Stela Action logo.
 - `debug`: (Optional) Enable debug mode.

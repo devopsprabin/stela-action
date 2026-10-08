@@ -120,6 +120,24 @@ func TestSendTemplatedPayload(t *testing.T) {
 	assert.Equal(t, "Drone", got.ActorName)
 }
 
+func TestSourceURLNone(t *testing.T) {
+	plugin := Plugin{
+		Build:  Build{Status: "success", Link: "https://ci.example.com/1"},
+		Config: Config{SourceURL: "none"},
+	}
+
+	payload, err := plugin.BuildPayload()
+
+	require.NoError(t, err)
+	assert.Empty(t, payload.SourceURL)
+
+	plugin.Config.SourceURL = ""
+	payload, err = plugin.BuildPayload()
+
+	require.NoError(t, err)
+	assert.Equal(t, "https://ci.example.com/1", payload.SourceURL)
+}
+
 func TestDefaultActorAvatar(t *testing.T) {
 	plugin := Plugin{Build: Build{Status: "success"}}
 

@@ -35,7 +35,7 @@ inputs:
     description: "Hex color such as #48f442. Defaults to a color derived from the status."
     required: false
   source_url:
-    description: "Link attached to the message. Defaults to the workflow run URL."
+    description: "Link attached to the message. Defaults to the workflow run URL. Set to none to send no link."
     required: false
   actor_name:
     description: "Override the actor name. Defaults to the GitHub actor."

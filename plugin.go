@@ -186,7 +186,7 @@ func (p *Plugin) BuildPayload() (Payload, error) {
 		Description:    description,
 		Status:         status,
 		Color:          p.color(status),
-		SourceURL:      firstNonEmpty(p.Config.SourceURL, p.Build.Link, p.Commit.Link),
+		SourceURL:      p.sourceURL(),
 		ActorName:      firstNonEmpty(p.Config.ActorName, p.Commit.Author),
 		ActorAvatarURL: firstNonEmpty(p.Config.ActorAvatarURL, p.Commit.Avatar, DefaultIconURL),
 	}, nil
@@ -229,6 +229,14 @@ func (p *Plugin) Send(ctx context.Context, payload Payload) error {
 	}
 
 	return nil
+}
+
+// sourceURL returns the message link; "none" sends the message without one.
+func (p *Plugin) sourceURL() string {
+	if strings.EqualFold(strings.TrimSpace(p.Config.SourceURL), "none") {
+		return ""
+	}
+	return firstNonEmpty(p.Config.SourceURL, p.Build.Link, p.Commit.Link)
 }
 
 func (p *Plugin) defaultTitle() string {

@@ -76,7 +76,7 @@ func main() {
 		},
 		&cli.StringFlag{
 			Name:    "source-url",
-			Usage:   "Link attached to the message. Defaults to the build link.",
+			Usage:   "Link attached to the message. Defaults to the build link. Use \"none\" to send no link.",
 			EnvVars: []string{"PLUGIN_SOURCE_URL", "INPUT_SOURCE_URL"},
 		},
 		&cli.StringFlag{
